@@ -1,19 +1,23 @@
 import sys
-input = sys.stdin.readline
 
-n = int(input())
-weight = sorted(list(map(int, input().split())), reverse=True)
-m = int(input())
-box = sorted(list(map(int, input().split())), reverse=True)
-time = 0
-if max(box) > max(weight):
+n = int(sys.stdin.readline())
+crane = list(map(int, sys.stdin.readline().split()))
+m = int(sys.stdin.readline())
+box = list(map(int, sys.stdin.readline().split()))
+
+crane.sort(reverse=True)
+box.sort(reverse=True)
+
+cnt = 0
+
+if box[0] > crane[0]:
     print(-1)
 else:
     while len(box) > 0:
-        time += 1
-        for i in range(len(weight)):
-            for j in range(len(box)):
-                if weight[i] >= box[j]:
-                    box.pop(j)
+        cnt += 1
+        for i in crane:
+            for j in box:
+                if i >= j:
+                    box.remove(j)
                     break
-    print(time)
+    print(cnt)
