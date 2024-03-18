@@ -24,8 +24,7 @@ def solution(bandage, health, attacks):
             health += y
             health = min(health, maxHealth)
             cnt = 0
-        print(curTime, health, cnt, flag)
-        
+            
         curTime += 1
         cnt += 1
         
