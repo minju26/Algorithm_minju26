@@ -1,36 +1,26 @@
-# boj 7795 :: 먹을 것인가 먹힐 것인가 :: silv.3
-
 import sys
 input = sys.stdin.readline
 
-caseNum = int(input().strip())
+t = int(input())
+ans = []
 
-for _ in range(caseNum):    
-    # input
+for _ in range(t):
     n, m = map(int, input().split())
     a = list(map(int, input().split()))
     b = list(map(int, input().split()))
 
-    # sort
     a.sort()
     b.sort()
 
-    # pointers
-    main = 0
-    sub = 0
+    result = 0
+    index_b = 0
 
-    count = 0
+    for index_a in range(n):
+        while index_b < m and b[index_b] < a[index_a]:
+            index_b += 1
+        result += index_b  # 현재 index_b는 a[index_a]보다 작은 원소의 개수
 
-    while main < n:
+    ans.append(result)
 
-        if sub == m:
-            count += sub
-            main += 1
-        else:
-            if a[main] > b[sub]:
-                sub += 1
-            else:
-                count += sub
-                main += 1
-    
-    print(count)
+for result in ans:
+    print(result)
