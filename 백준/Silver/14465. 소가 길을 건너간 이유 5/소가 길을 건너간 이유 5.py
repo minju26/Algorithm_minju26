@@ -1,27 +1,28 @@
 import sys
 input = sys.stdin.readline
 
-n, k, b = list(map(int, input().split()))
+n, k, b = map(int, input().split())
 
-check = [0] * n
+lights = [1] * n
+psum = [0] * n
+psum[0] = lights[0]
 
 for _ in range(b):
-    id = int(input())
-    check[id -1] = 1
-
-psum = [0] * n
-psum[0] = check[0]
+    i = int(input())
+    lights[i-1] = 0
 
 for i in range(1, n):
-    psum[i] = psum[i - 1] + check[i]
+    psum[i] = psum[i-1] + lights[i]
 
-need = []
-for i in range(0, n - k + 1):
-    if i == 0:
-        num = psum[i + k - 1]
+max_psum = -1
+for i in range(k-1, n):
+    cur_psum = -1
+
+    if i == (k - 1):
+        cur_psum = psum[i]
     else:
-        num = psum[i + k - 1] - psum[i - 1]
+        cur_psum = psum[i] - psum[i - k]
     
-    need.append(num)
+    max_psum = max(max_psum, cur_psum)
 
-print(min(need))
+print(k - max_psum)
