@@ -1,26 +1,32 @@
 import sys
-sys.setrecursionlimit(100000)
 input = sys.stdin.readline
 
-v = int(input())
-e = int(input())
+n = int(input())
+m = int(input())
 
-graph = [[] for _ in range(v+1)]
-visited = [False]*(v+1)
+adj = [[] for _ in range(n)]
 
-for i in range(e):
-    v1, v2 = map(int, input().split())
-    graph[v1].append(v2)
-    graph[v2].append(v1)
+for _ in range(m):
+    a, b = map(int, input().split())
+    adj[a-1].append(b-1)
+    adj[b-1].append(a-1)
 
+v = [0] * n
+v[0] = 1
 
-def dfs(graph, visited, s):
-    visited[s] = True
+while True:
+    new = False # 새로운 감염이 발생하지 않을 때 까지 진행해야 하므로, flag 역할
 
-    for i in graph[s]:
-        if not visited[i]:
-            dfs(graph, visited, i)
+    for i in range(n):
+        if v[i] == 0:
+            continue
 
-dfs(graph, visited, 1)
+        for j in adj[i]:
+            if v[j] == 0:
+                v[j] = 1
+                new = True
+    
+    if not new:
+        break
 
-print(visited.count(True) -1)
+print(sum(v) - 1)
