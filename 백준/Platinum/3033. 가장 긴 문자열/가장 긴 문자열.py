@@ -1,71 +1,69 @@
-# boj 3033 :: 가장 긴 문자열 :: plt.3
-
 import sys
 input = sys.stdin.readline
 
+# 입력 & 정답
 l = int(input())
 s = input()
 ans = 0
 
-# 해시 값을 위한 준비물
-mod = 1e9 + 7
-po = [0] * l    # po[i] = 31**i
+# 해시 값 준비(s의 길이 l에 따른, 31의 (l-1)거듭제곱 까지 준비)
+mod = 1e9 + 7   # 해시 값 커짐 방지
+po = [0] * l
 po[0] = 1
 for i in range(1, l):
     po[i] = po[i - 1] * 31 % mod
 
-# 이분 탐색(부분 문자열 길이)
+# 길이 이분 탐색 준비
 start = 1
 end = l - 1
 
 while start <= end:
     mid = (start + end) // 2
 
-    # 길이가 mid인 부분 문자열 중에 2번 이상 등장하는 것이 있는지 판단
-    found = False   # 찾았음을 표시하는 flag
+    # 찾음 여부 flag
+    found = False
 
+    # 첫 부분 문자열(길이 mid)의 해시값 계산
     hash = 0
-    # 처음 해시 값 계산
     for i in range(mid):
         hash *= 31
         hash %= mod
+
         hash += ord(s[i]) - ord('a') + 1
         hash %= mod
-        
-    check = {}
-    # mid 길이의 슬라이딩 윈도우
-    for i in range(0, l - mid + 1):
-        # s[i:i+mid] 문자열의 해시 값 체크
-        if hash in check:
-            # found = True
-            # break
-            for j in check[hash]:
-                if s[j : mid + j] == s[i : i + mid]:    # 실제로 문자열이 같은지 정확하게 확인
-                    found = True
-                    break
-            check[hash].append(i)
-            
-            if found:
-                break
-        else:
-            check[hash] = [i]
 
-        # 해시 값 갱신
-        largest = ord(s[i]) - ord('a') + 1
+    # 이전 해시 값 저장을 위한 딕셔너리
+    checked = {}
+    for i in range(0, l - mid + 1):
+
+        if hash in checked:
+            for j in checked[hash]:
+                if s[j : j + mid] == s[i : i + mid]:
+                    found = True
+                    break   # j for문 빠져나감
+            checked[hash].append(i)
+
+            if found:
+                break   # i for문 빠져나감
+        else:
+            checked[hash] = [i]
+
+        # 해시 업데이트
+        largest = ord(s[i]) - ord('a') + 1      # 현재 부분 문자열의 첫 문자(제거)
         hash += mod - largest * po[mid - 1]
         hash %= mod
-
-        hash *= 31
-        hash %= mod
-
-        if i + mid < l:
-            hash += ord(s[mid + i]) - ord('a') + 1
+        # 부분 문자열의 마지막 문자 추가
+        if i < l - mid:
+            hash *= 31
+            hash %= mod
+            hash += ord(s[i + mid]) - ord('a') + 1
             hash %= mod
 
+    # 부분 문자열 길이 업데이트
     if found:
-        ans = mid
-        start = mid + 1
+        ans = mid   # 현재 찾은 길이 저장
+        start = mid + 1     # 더 긴 길이 탐색
     else:
-        end = mid - 1
+        end = mid - 1   # 더 짧은 길이 탐색
 
 print(ans)
