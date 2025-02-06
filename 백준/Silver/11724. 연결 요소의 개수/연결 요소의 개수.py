@@ -6,7 +6,7 @@ input = sys.stdin.readline
 n, m = map(int, input().split())
 adj = [[] for _ in range(n)]
 visited = [False] * n
-cc = [-1] * n
+# cc = [-1] * n
 
 for _ in range(m):
     a, b = map(int, input().split())
@@ -16,13 +16,13 @@ for _ in range(m):
 def bfs(adj, visited, start, cnt):
     q = deque([start])
     visited[start] = True
-    cc[start] = cnt
+    # cc[start] = cnt
     while q:
         v = q.popleft()
         for i in adj[v]:
             if not visited[i]:
                 visited[i] = True
-                cc[i] = cnt
+                # cc[i] = cnt
                 q.append(i)
 
 cnt = 0
@@ -31,4 +31,4 @@ for i in range(n):
         cnt += 1
         bfs(adj, visited, i, cnt)
 
-print(max(cc))
+print(cnt)
