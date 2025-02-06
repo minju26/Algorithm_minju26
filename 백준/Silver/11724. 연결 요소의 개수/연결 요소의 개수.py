@@ -1,30 +1,34 @@
 import sys
+from collections import deque
 
 input = sys.stdin.readline
 
-''' 초기화 '''
-n, m = map(int, input().split())    # n:node , m:edge
-A_list = [[] for _ in range(n+1)]   # Adjacency list
-visited = [False] * (n+1)   # visited node check
-cnt = 0
+n, m = map(int, input().split())
+adj = [[] for _ in range(n)]
+visited = [False] * n
+cc = [-1] * n
 
-''' DFS '''
-def dfs(v):
-    visited[v] = True
-    for i in A_list[v]:
-        if not visited[i]:
-            dfs(i)
-
-''' input '''
 for _ in range(m):
-    start, end = map(int, input().split())
-    A_list[start].append(end)
-    A_list[end].append(start)   # undirected graph
+    a, b = map(int, input().split())
+    adj[a - 1].append(b - 1)
+    adj[b - 1].append(a -1)
 
+def bfs(adj, visited, start, cnt):
+    q = deque([start])
+    visited[start] = True
+    cc[start] = cnt
+    while q:
+        v = q.popleft()
+        for i in adj[v]:
+            if not visited[i]:
+                visited[i] = True
+                cc[i] = cnt
+                q.append(i)
 
-for i in range(1, n+1):
+cnt = 0
+for i in range(n):
     if not visited[i]:
         cnt += 1
-        dfs(i)
+        bfs(adj, visited, i, cnt)
 
-print(cnt)
+print(max(cc))
