@@ -4,28 +4,40 @@ from collections import deque
 input = sys.stdin.readline
 
 n, m = map(int, input().split())
-maze = []
+map = [list(map(int, input().strip())) for _ in range(n)]
 
-for _ in range(n):
-    maze.append(list(map(int, input().rstrip())))
+visited = [[False] * m for _ in range(n)]
+dist = [[-1] * m for _ in range(n)]
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+queue = deque([(0, 0)])
+visited[0][0] = True
+dist[0][0] = 0
 
-def bfs(a, b):
-    queue = deque()
-    queue.append((a,b))
+while len(queue) != 0:
+    row, col = queue.popleft()
 
-    while queue:
-        a, b = queue.popleft()
-        for i in range(4):
-            next_a = a + dx[i]
-            next_b = b + dy[i]
+    # 위
+    if row > 0 and map[row -1][col] == 1 and not visited[row - 1][col]:
+        queue.append((row - 1, col))
+        visited[row - 1][col] = True
+        dist[row - 1][col] = dist[row][col] + 1
+    
+    # 아래
+    if row < n - 1 and map[row + 1][col] == 1 and not visited[row + 1][col]:
+        queue.append((row + 1, col))
+        visited[row + 1][col] = True
+        dist[row + 1][col] = dist[row][col] + 1
+    
+    # 오
+    if col < m - 1 and map[row][col + 1] == 1 and not visited[row][col + 1]:
+        queue.append((row, col + 1))
+        visited[row][col + 1] = True
+        dist[row][col + 1] = dist[row][col] + 1
+    
+    # 왼
+    if col > 0 and map[row][col - 1] == 1 and not visited[row][col - 1]:
+        queue.append((row, col - 1))
+        visited[row][col - 1] = True
+        dist[row][col - 1] = dist[row][col] + 1
 
-            if 0 <= next_a < n and 0 <= next_b < m and maze[next_a][next_b] == 1:
-                queue.append([next_a, next_b])
-                maze[next_a][next_b] = maze[a][b] + 1
-
-    return maze[n-1][m-1]
-
-print(bfs(0,0))
+print(dist[n - 1][m - 1] + 1)
