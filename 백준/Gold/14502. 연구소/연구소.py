@@ -7,15 +7,6 @@ input = sys.stdin.readline
 n, m = map(int, input().split())
 lab = [list(map(int, input().split())) for _ in range(n)]
 
-def findAns():
-    cnt = 0
-    for i in range(n):
-        for j in range(m):
-            if lab[i][j] == 0:
-                cnt += 1
-
-    return cnt
-
 loc = []
 for i in range(n):
     for j in range(m):
