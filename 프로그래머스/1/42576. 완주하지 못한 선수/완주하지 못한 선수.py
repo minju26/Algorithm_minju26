@@ -1,12 +1,6 @@
 def solution(participant, completion):
-    participant.sort()
-    completion.sort()
+    hash_loser = sum([hash(a) for a in participant])-sum([hash(a) for a in completion])
     
-    pos = 0
-    while pos < len(completion):
-        if participant[pos] != completion[pos]:
-            break
-        pos += 1
-    
-    answer = participant[pos]
-    return answer
+    for a in participant:
+        if hash(a) == hash_loser:
+            return a
