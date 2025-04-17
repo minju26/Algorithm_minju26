@@ -1,18 +1,15 @@
 def solution(numbers, target):
-    n = len(numbers)
-    cnt = 0
+    stack = [(0, 0)]
+    count = 0
     
-    def sum(num, i, s):
-        nonlocal cnt
-        num += numbers[i] * s
-
-        if i == (n - 1):
-            if num == target: cnt += 1
-            return
+    while stack:
+        cur, idx = stack.pop()
         
-        sum(num, i + 1, 1)
-        sum(num, i + 1, -1)
+        if idx == len(numbers):
+            if cur == target:
+                count += 1
+        else:
+            stack.append((cur + numbers[idx], idx + 1))
+            stack.append((cur - numbers[idx], idx + 1))
     
-    sum(0, 0, 1)
-    sum(0, 0, -1)
-    return cnt
+    return count
