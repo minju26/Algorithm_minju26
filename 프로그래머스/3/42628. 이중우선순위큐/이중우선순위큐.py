@@ -16,27 +16,31 @@ def solution(operations):
             i += 1
         
         if operation == 'D':
-            if len(max_q) * len(min_q) == 0: continue
+            if not max_q or not min_q: continue
             
-            if data == -1:
-                while min_q:
-                    num, numid = heapq.heappop(min_q)
-                    if numid not in removed:
-                        removed.add(numid)
-                        break
-            else:
-                while max_q:
-                    num, numid = heapq.heappop(max_q)
-                    if numid not in removed:
-                        removed.add(numid)
-                        break
-    
-    ans = []
-    for num in min_q:
-        if num[1] not in removed:
-            ans.append(num[0])                    
-    
-    if ans == []:
+            q = min_q if data == -1 else max_q
+            
+            while q:
+                num, numid = heapq.heappop(q)
+                if numid not in removed:
+                    removed.add(numid)
+                    break
+
+    max_val = None
+    while max_q:
+        val, idx = heapq.heappop(max_q)
+        if idx not in removed:
+            max_val = -val
+            break
+
+    min_val = None
+    while min_q:
+        val, idx = heapq.heappop(min_q)
+        if idx not in removed:
+            min_val = val
+            break
+
+    if max_val is None or min_val is None:
         return [0, 0]
-    
-    return [max(ans), min(ans)]
+
+    return [max_val, min_val]
